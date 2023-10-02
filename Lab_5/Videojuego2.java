@@ -1,3 +1,4 @@
+import java.util.*;
 public class Videojuego2 {
     public static void main(String[] args) {
         Soldado[][] navy = new Soldado[4][5];
@@ -14,9 +15,8 @@ public class Videojuego2 {
         displaySoldier(navy);
         System.out.println("---------Bubble sort--------");
         rankSoldierBubbleSort(navy);
-        displaySoldier(navy);
-        //System.out.println("---------Selection sort--------");
-        //rankSoldierSelectionSort(navy);
+        System.out.println("---------Selection sort--------");
+        rankSoldierSelectionSort(navy);
     }
     /* Cada soldado tendrá un nombre autogenerado: Soldado0,etc,un valor de nivel de vida autogenerado 
     aleatoriamente [1..5], la fila y columna también autogenerados aleatoriamente (verificar que 
@@ -24,15 +24,17 @@ public class Videojuego2 {
     public static void fillSoldier(Soldado[][] army){
         int fila = army.length;
         int columna = army[0].length;
-        int n = generateSoldier();
+        int n= generateSoldier();
+        int i=0;
         System.out.println(n);
-        for (int i = 0; i < n; i++) {
-            String name = "Soldado"+i;
+        while(i<n){
             int lifeN = (int)(Math.random()*5+1);
             int row = (int)(Math.random()*fila);
-            int column = (int)(Math.random()*columna);
-            if(army[row][column] == null){
-                army[row][column] = new Soldado(name, lifeN, row, column);
+            int col = (int)(Math.random()*columna);
+            if(army[row][col] == null){
+                String name = "Soldado"+i;
+                army[row][col] = new Soldado(name, lifeN, row, columna);
+                i++;   
             }
         }
     }
@@ -79,11 +81,20 @@ public class Videojuego2 {
     }
     /*los datos de todos los soldados en el orden que fueron creados */
     public static void displaySoldier(Soldado[][] army){
-        for (int i = 0; i < army.length; i++) {
-            for (int j = 0; j < army[i].length; j++) {
-                if(army[i][j] != null)
-                System.out.println(army[i][j]);
+        ArrayList<Soldado> sold = bidToUni(army);
+        for (int i = 0; i < sold.size(); i++) {
+            for (int j = 0; j < sold.size() - 1 - i; j++) {
+                String w1 = sold.get(j).getName();
+                String w2 = sold.get(j+1).getName();
+                if(w1.compareTo(w2)>0){
+                Soldado tempo = sold.get(j);
+                sold.set(j,sold.get(j+1));
+                sold.set(j+1, tempo);
+                }
             }
+        }
+        for (int i = 0; i < sold.size(); i++) {
+            System.out.println(sold.get(i)); 
         }
     }
     /*Se debe mostrar el tablero con todos los soldados creados (usar caracteres como | _ y otros */
@@ -107,46 +118,47 @@ public class Videojuego2 {
     }
     /*un ranking de poder de todos los soldados creados, mayor al menor (usar al menos 2 algoritmos de ordenamiento). */
     public static void rankSoldierBubbleSort(Soldado[][] army) {
-        Soldado[] sold = bidToUni(army);
-        for (int i = 0; i < sold.length; i++) {
-            for (int j = 0; j < sold.length - 1 - i; j++) {  // Corrección aquí
-                if (sold[j] != null && sold[j + 1] != null && sold[j].getLifeN() < sold[j + 1].getLifeN()) {
-                    Soldado tempo = sold[j];
-                    sold[j] = sold[j + 1];
-                    sold[j + 1] = tempo;
+        ArrayList<Soldado> sold = bidToUni(army);
+        for (int i = 0; i < sold.size(); i++) {
+            for (int j = 0; j < sold.size()-1-i; j++) {  
+                if (sold.get(j).getLifeN() < sold.get(j+1).getLifeN()) {
+                    Soldado tempo = sold.get(j);
+                    sold.set(j,sold.get(j+1));
+                    sold.set(j+1, tempo);
                 }
             }
         }
+        for(int i=0; i<sold.size(); i++){
+            System.out.println(sold.get(i));
+        }
     }
-    public static Soldado[] bidToUni(Soldado[][] army){
-        int large = army.length * army[0].length;
-        Soldado[] sold = new Soldado[large];
-        int index = 0;
+    public static ArrayList<Soldado> bidToUni(Soldado[][] army){
+        ArrayList<Soldado> sold = new ArrayList<>();
         for (int i = 0; i < army.length; i++) {
             for (int j = 0; j < army[0].length; j++) {
-                sold[index++] = army[i][j];
+                if(army[i][j] != null){
+                    sold.add(army[i][j]);
+                }
             }
         }
         return sold;
     }
     public static void rankSoldierSelectionSort(Soldado[][] army){
-        Soldado[] sold = bidToUni(army);
-        for (int i = 0; i < sold.length; i++) {
+        ArrayList<Soldado> sold= bidToUni(army);
+        for (int i = 0; i < sold.size(); i++) {
             int idx = i;
-            for (int j = i+1; j < sold.length; j++) {
-                if(sold[j] != null && sold[idx] != null && sold[j].getLifeN() > sold[idx].getLifeN()){
+            for (int j = i+1; j < sold.size(); j++) {
+                if(sold.get(j).getLifeN() > sold.get(idx).getLifeN()){
                     idx = j;
                 }
             }
-            Soldado tempo = sold[i];
-            sold[i] = sold[idx];
-            sold[idx] = tempo;
+            Soldado tempo = sold.get(i);
+            sold.set(i, sold.get(idx));
+            sold.set(idx, tempo);
             
         }
-        for (int i = 0; i < sold.length; i++) {
-            if(sold[i] != null){
-                System.out.println(sold[i]);
-            }
+        for(int i = 0; i<sold.size(); i++){
+            System.out.println(sold.get(i));
         }
     }
 }
