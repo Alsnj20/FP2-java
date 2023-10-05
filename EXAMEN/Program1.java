@@ -35,21 +35,16 @@ public class Program1 {
             i++;
         }
     }
-    public static void generateSort(ArrayList<Alumno> alum){
-        for (int i = 0; i < alum.size(); i++) {
-            int n = (int)(Math.random()*alum.size());
-            Alumno tempo = alum.get(i);
-            alum.set(n, tempo);
-        }
-    }
     public static void generateSort(ArrayList<Alumno> alum) {
-        int n = alum.size();
-        for (int i = n - 1; i > 0; i--) {
+        for (int i = 0; i <alum.size(); i++) {
             int j = (int)(Math.random()*i+1);
+            if(j != i){
             Alumno temp = alum.get(i);
             alum.set(i, alum.get(j));
             alum.set(j, temp);
-        }
+            }
+        }        
+    }
     
     public static void printList(ArrayList<Alumno> alum){
         for (int i = 0; i < alum.size(); i++) {
