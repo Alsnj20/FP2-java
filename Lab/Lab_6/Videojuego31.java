@@ -1,49 +1,58 @@
 import java.util.*;
-public class Videojuego3 {
+public class Videojuego31 {
     public static void main(String[] args) {
         ArrayList<ArrayList<Soldado>> navy1 = new ArrayList<ArrayList<Soldado>>();
         ArrayList<ArrayList<Soldado>> navy2 = new ArrayList<ArrayList<Soldado>>();
-        //Definimos los ArrayList
+        System.out.println("Ejercito1");
         fillRow(navy1,3,4);
+        fillSoldier(navy1);
+        displaySoldier(navy1);
+        System.out.println("Ejercito2");
         fillRow(navy2, 3, 4);
-        fillSoldier(navy1, navy2);
-        fillSoldier(navy2, navy1);
+        fillSoldier2(navy2, navy1);
+        displaySoldier(navy2);
         displaySoldierNavy(navy1, navy2);
         System.out.println("-----------------------------");
-        System.out.println("EJERCITO 1: El soldado con mayor vida es: \n"+mostlifeN(navy1));
-        System.out.println("EJERCITO 2: El soldado con mayor vida es: \n"+mostlifeN(navy2));
+        System.out.println("El soldado con mayor vida es: \n"+mostlifeN(navy1));
         System.out.println("-----------------------------");
-        System.out.println("EJERCITO 1: El promedio de nivel de vida de los soldados es: "+averageLifeN(navy1));
-        System.out.println("EJERCITO 2: El promedio de nivel de vida de los soldados es: "+averageLifeN(navy2));
+        System.out.println("El promedio de nivel de vida de los soldados es: "+averageLifeN(navy1));
         System.out.println("-----------------------------");
-        System.out.println("EJERCITO 1: Nivel de vida de todo el ejercito es: "+displayLifeN(navy1));
-        System.out.println("EJERCITO 2: Nivel de vida de todo el ejercito es: "+displayLifeN(navy2));
+        System.out.println("Nivel de vida de todo el ejercito es: "+displayLifeN(navy1));
         System.out.println("-----------------------------");
-        System.out.println("EJERCITO 1: Datos de los soldados en orden de creación: ");
+        System.out.println("Datos de los soldados en orden de creación: ");
         displaySoldier(navy1);
-        System.out.println("EJERCITO 2: Datos de los soldados en orden de creación: ");
-        displaySoldier(navy2);
         System.out.println("---------Bubble sort--------");
-        System.out.println("EJERCITO 1:");
         rankSoldierBubbleSort(navy1);
-        System.out.println("EJERCITO 2:");
-        rankSoldierBubbleSort(navy2);
         System.out.println("---------Selection sort--------");
-        System.out.println("EJERCITO 1:");
         rankSoldierSelectionSort(navy1);
-        System.out.println("EJERCITO 2:");
-        rankSoldierSelectionSort(navy2);
-        System.out.println("--------El Ganador de acuerdo al nivel de vida es:-------");
-        betterWonArmy(navy1, navy2);
     }
     /* Cada soldado tendrá un nombre autogenerado: Soldado0X1, Soldado1X1, etc., un
     valor de puntos de vida autogenerado aleatoriamente [1..5], la fila y columna también
     autogenerados aleatoriamente (no puede haber 2 soldados en el mismo cuadrado). */
-    public static void fillSoldier(ArrayList<ArrayList<Soldado>> army2, ArrayList<ArrayList<Soldado>> army1 ){
+    public static void fillSoldier(ArrayList<ArrayList<Soldado>> army){
+        int fila = army.size();
+        int columna = army.get(0).size();
+        int n= generateSoldier();
+        int i=0;
+        System.out.println(n);
+        while(i<n){
+            int lifeN = (int)(Math.random()*5+1);
+            int row = (int)(Math.random()*fila);
+            int col = (int)(Math.random()*columna);
+            if(army.get(row).get(col) == null){
+                String name = "Soldado"+row+"X"+col;
+                Soldado s= new Soldado(name, lifeN, row, col);
+                army.get(row).set(col, s);
+                i++;   
+            }
+        }
+    }
+    public static void fillSoldier2(ArrayList<ArrayList<Soldado>> army2, ArrayList<ArrayList<Soldado>> army1 ){
         int fila = army2.size();
         int columna = army2.get(0).size();
         int n= generateSoldier();
         int i=0;
+        System.out.println(n);
         while(i<n){
             int lifeN = (int)(Math.random()*5+1);
             int row = (int)(Math.random()*fila);
@@ -127,7 +136,7 @@ public class Videojuego3 {
     /*Se debe mostrar el tablero con todos los soldados creados (distinguir los de un ejército de los del otro
     ejército) */
     public static void displaySoldierNavy(ArrayList<ArrayList<Soldado>> army, ArrayList<ArrayList<Soldado>> army2){
-        for (int i = 0; i < army.get(0).size(); i++) {
+        for (int i = 0; i < army.size(); i++) {
             System.out.print("     "+i);
         }
         System.out.println();
@@ -135,9 +144,9 @@ public class Videojuego3 {
             System.out.print(i+" ");
             for (int j = 0; j < army.get(i).size(); j++) {
                 if (army.get(i).get(j) != null) {
-                    System.out.print("|E1:"+army.get(i).get(j).getLifeN()+"|");
+                    System.out.print("|S1:"+army.get(i).get(j).getLifeN()+"|");
                 }else if(army2.get(i).get(j) != null) {
-                    System.out.print("|E2:"+army2.get(i).get(j).getLifeN()+"|");    
+                    System.out.print("|S2:"+army2.get(i).get(j).getLifeN()+"|");    
                 }else{
                     System.out.print("|____|");
                 }
@@ -192,15 +201,4 @@ public class Videojuego3 {
     }
     /*Finalmente, que muestre qué ejército ganará la batalla (indicar la métrica usada para decidir al ganador 
     de la batalla). */
-    public static void betterWonArmy(ArrayList<ArrayList<Soldado>> army1, ArrayList<ArrayList<Soldado>> army2){
-        int pointArmy1 = displayLifeN(army1);
-        int pointArmy2 = displayLifeN(army2);
-        if(pointArmy1 == pointArmy2){
-            System.out.println("EMPATE");
-        }else if(pointArmy1>pointArmy2){
-            System.out.println("El Ejercito 1 gana");
-        }else{
-            System.out.println("El Ejercito 2 gana");
-        }
-    } 
 }
