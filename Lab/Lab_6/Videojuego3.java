@@ -1,3 +1,4 @@
+//lab6-Mariel Jara
 import java.util.*;
 public class Videojuego3 {
     public static void main(String[] args) {
