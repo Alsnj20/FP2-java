@@ -1,6 +1,6 @@
-//Lab5 - Mariel Jara
+package Lab.Lab_9;
 import java.util.*;
-public class Videojuego5 {
+public class Videojuego6 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String answer = "";
@@ -8,11 +8,11 @@ public class Videojuego5 {
             System.out.println("Ingrese las dimensiones del tablero (fila/columna)");
             int f = sc.nextInt();
             int c = sc.nextInt();
-            HashMap<Integer, Soldado> navy1 = new HashMap<>();
-            HashMap<Integer, Soldado> navy2 = new HashMap<>();
-            fillSoldier(navy1, navy2, f, c);
-            fillSoldier(navy2, navy1, f, c);
-            displaySoldierNavy(navy1, navy2, f, c);
+            Soldado[][] navy1 = new Soldado[f][c];
+            Soldado[][] navy2 = new Soldado[f][c];
+            fillSoldier(navy1, navy2);
+            fillSoldier(navy2, navy1);
+            displaySoldierNavy(navy1, navy2);
             System.out.println("-----------------------------");
             System.out.println("EJERCITO 1: El soldado con mayor vida es: \n" + mostlifeN(navy1));
             System.out.println("EJERCITO 2: El soldado con mayor vida es: \n" + mostlifeN(navy2));
@@ -23,10 +23,8 @@ public class Videojuego5 {
             System.out.println("EJERCITO 1: Nivel de vida de todo el ejercito es: " + displayLifeN(navy1));
             System.out.println("EJERCITO 2: Nivel de vida de todo el ejercito es: " + displayLifeN(navy2));
             System.out.println("-----------------------------");
-            System.out.println(navy1);
             System.out.println("EJERCITO 1: Datos de los soldados en orden de creación: ");
             displaySoldier(navy1);
-            System.out.println(navy2);
             System.out.println("EJERCITO 2: Datos de los soldados en orden de creación: ");
             displaySoldier(navy2);
             System.out.println("---------Bubble sort--------");
@@ -55,114 +53,76 @@ public class Videojuego5 {
      * autogenerados aleatoriamente (no puede haber 2 soldados en el mismo
      * cuadrado).
      */
-    public static void fillSoldier(HashMap<Integer, Soldado> army1, HashMap<Integer, Soldado> army2, int f, int c) {
+    public static void fillSoldier(Soldado[][] army1, Soldado[][] army2) {
+        int fila = army1.length;
+        int columna = army1[0].length;
         int n = generateSoldier();
         int i = 0;
-        System.out.println(n);
         while (i < n) {
             int lifeN = (int) (Math.random() * 5 + 1);
-            int row = (int) (Math.random() * f);
-            int col = (int) (Math.random() * c);
-            String name = "Soldado" + row + "X" + col;
-            if (!exist(army1, name, row, col) && !exist(army2, name, row, col)){
-                Soldado sol = new Soldado(name, lifeN, row, col);
-                army1.put(i, sol);
+            int row = (int) (Math.random() * fila);
+            int col = (int) (Math.random() * columna);
+            if (army1[row][col] == null && army2[row][col] == null) {
+                String name = "Soldado" + row + "X" + col;
+                army1[row][col] = new Soldado(name, lifeN, row, col);
+                army1[row][col].setNiveldeAtaque(generateLevel());
+                army1[row][col].setNiveldeDefensa(generateLevel());
                 i++;
             }
         }
     }
-    public static boolean exist(HashMap<Integer, Soldado> army, String name, int row, int col) {
-        for (Soldado s : army.values()) {
-            if (s.getName().equals(name) || (s.getFila() == row && s.getColumna() == col)) {
-                return true;
-            }
-        }
-        return false;
+    public static int generateLevel(){
+        return (int) (Math.random() * 5 + 1);
     }
     /* Inicializar el tablero con n soldados aleatorios entre 1 y 10 */
     public static int generateSoldier() {
         return (int) (Math.random() * 10 + 1);
     }
     /* Además de los datos del Soldado con mayor vida de cada ejército, */
-    public static Soldado mostlifeN(HashMap<Integer, Soldado> army) {
+    public static Soldado mostlifeN(Soldado[][] army) {
         Soldado tempo = new Soldado("", 0, 0, 0);
-        for (Map.Entry<Integer, Soldado> entry : army.entrySet()) {
-            Soldado soldado = entry.getValue();
-            if (soldado.getLifeN() > tempo.getLifeN()){
-                tempo = soldado;
+        for (int i = 0; i < army.length; i++) {
+            for (int j = 0; j < army[i].length; j++) {
+                if (army[i][j] != null && tempo.getVidaActual() < army[i][j].getVidaActual()) {
+                    tempo = army[i][j];
+                }
             }
         }
         return tempo;
     }
     /* el promedio de puntos de vida de todos los soldados creados por ejército */
-    public static double averageLifeN(HashMap<Integer, Soldado> army) {
-        int suma = 0;
-        for (Map.Entry<Integer, Soldado> entry : army.entrySet()) {
-            Soldado soldado = entry.getValue();
-            suma += soldado.getLifeN();
+    public static double averageLifeN(Soldado[][] army) {
+        int suma = 0, total = 0;
+        for (int i = 0; i < army.length; i++) {
+            for (int j = 0; j < army[i].length; j++) {
+                if (army[i][j] != null) {
+                    suma += army[i][j].getVidaActual();
+                    total++;
+                }
+            }
         }
-        return (suma * 1.0) / army.size();
+        return (suma * 1.0) / total;
     }
     /* El nivel de vida de todo el ejército */
-    public static int displayLifeN(HashMap<Integer, Soldado> army) {
+    public static int displayLifeN(Soldado[][] army) {
         int lifeT = 0;
-        for (Map.Entry<Integer, Soldado> entry : army.entrySet()) {
-            Soldado soldado = entry.getValue();
-            lifeT += soldado.getLifeN();
+        for (int i = 0; i < army.length; i++) {
+            for (int j = 0; j < army[i].length; j++) {
+                if (army[i][j] != null) {
+                    lifeT += army[i][j].getVidaActual();
+                }
+            }
         }
         return lifeT;
     }
     /* los datos de todos los soldados en el orden que fueron creados */
-    public static void displaySoldier(HashMap<Integer, Soldado> army) {
-        TreeMap<Integer, Soldado> order = new TreeMap<>();
-        order.putAll(army);
-        for (int n : order.keySet()) {
-            System.out.println(n+" => "+order.get(n));
-        }
-    }
-    /*
-     * Se debe mostrar el tablero con todos los soldados creados (distinguir los de
-     * un ejército de los del otro
-     * ejército)
-     */
-    public static void displaySoldierNavy(HashMap<Integer, Soldado> army1, HashMap<Integer, Soldado> army2, int f, int c) {
-        String[][] sold1 = new String[f][c];
-        String[][] sold2 = new String[f][c];
-        for(Soldado s : army1.values()){
-            int f1 = s.getFila();
-            int c1 = s.getColumna();
-            sold1[f1][c1] = "|E1:"+s.getLifeN()+"|"; 
-        }
-        for(Soldado s : army2.values()){
-            int f2 = s.getFila();
-            int c2 = s.getColumna();
-            sold1[f2][c2] = "|E2:"+s.getLifeN()+"|"; 
-        }
-        for (int i = 0; i < sold2[0].length; i++) {
-            System.out.print("     " + i);
-        }
-        System.out.println();
-        for (int i = 0; i < sold1.length; i++) {
-            System.out.print(i + " ");
-            for (int j = 0; j < sold1[i].length; j++) {
-                if(sold1[i][j] != null){
-                    System.out.print(sold1[i][j]);
-                }else{
-                    System.out.print("|____|");
-                }
-            }
-            System.out.println();
-        }
-    }
-    /*
-     * un ranking de poder de todos los soldados creados, mayor al menor (usar al
-     * menos 2 algoritmos de ordenamiento).
-     */
-    public static void rankSoldierBubbleSort(HashMap<Integer, Soldado> army) {
-        ArrayList<Soldado> sold = MapToList(army);
+    public static void displaySoldier(Soldado[][] army) {
+        ArrayList<Soldado> sold = bidToUni(army);
         for (int i = 0; i < sold.size(); i++) {
             for (int j = 0; j < sold.size() - 1 - i; j++) {
-                if (sold.get(j).getLifeN() < sold.get(j + 1).getLifeN()) {
+                String w1 = sold.get(j).getName();
+                String w2 = sold.get(j + 1).getName();
+                if (w1.compareTo(w2) > 0) {
                     Soldado tempo = sold.get(j);
                     sold.set(j, sold.get(j + 1));
                     sold.set(j + 1, tempo);
@@ -173,19 +133,66 @@ public class Videojuego5 {
             System.out.println(sold.get(i));
         }
     }
-    public static ArrayList<Soldado> MapToList(HashMap<Integer, Soldado> army) {
+    /*
+     * Se debe mostrar el tablero con todos los soldados creados (distinguir los de
+     * un ejército de los del otro
+     * ejército)
+     */
+    public static void displaySoldierNavy(Soldado[][] army1, Soldado[][] army2) {
+        for (int i = 0; i < army1[0].length; i++) {
+            System.out.print("     " + i);
+        }
+        System.out.println();
+        for (int i = 0; i < army1.length; i++) {
+            System.out.print(i + " ");
+            for (int j = 0; j < army1[0].length; j++) {
+                if (army1[i][j] != null) {
+                    System.out.print("|E1:" + army1[i][j].getVidaActual() + "|");
+                } else if (army2[i][j] != null) {
+                    System.out.print("|E2:" + army2[i][j].getVidaActual() + "|");
+                } else {
+                    System.out.print("|____|");
+                }
+            }
+            System.out.println();
+        }
+    }
+    /*
+     * un ranking de poder de todos los soldados creados, mayor al menor (usar al
+     * menos 2 algoritmos de ordenamiento).
+     */
+    public static void rankSoldierBubbleSort(Soldado[][] army) {
+        ArrayList<Soldado> sold = bidToUni(army);
+        for (int i = 0; i < sold.size(); i++) {
+            for (int j = 0; j < sold.size() - 1 - i; j++) {
+                if (sold.get(j).getVidaActual() < sold.get(j + 1).getVidaActual()) {
+                    Soldado tempo = sold.get(j);
+                    sold.set(j, sold.get(j + 1));
+                    sold.set(j + 1, tempo);
+                }
+            }
+        }
+        for (int i = 0; i < sold.size(); i++) {
+            System.out.println(sold.get(i));
+        }
+    }
+    public static ArrayList<Soldado> bidToUni(Soldado[][] army) {
         ArrayList<Soldado> sold = new ArrayList<>();
-        for (Map.Entry<Integer, Soldado> order : army.entrySet()){
-            sold.add(order.getValue());
+        for (int i = 0; i < army.length; i++) {
+            for (int j = 0; j < army[0].length; j++) {
+                if (army[i][j] != null) {
+                    sold.add(army[i][j]);
+                }
+            }
         }
         return sold;
     }
-    public static void rankSoldierSelectionSort(HashMap<Integer, Soldado> army) {
-        ArrayList<Soldado> sold = MapToList(army);
+    public static void rankSoldierSelectionSort(Soldado[][] army) {
+        ArrayList<Soldado> sold = bidToUni(army);
         for (int i = 0; i < sold.size(); i++) {
             int idx = i;
             for (int j = i + 1; j < sold.size(); j++) {
-                if (sold.get(j).getLifeN() > sold.get(idx).getLifeN()) {
+                if (sold.get(j).getVidaActual() > sold.get(idx).getVidaActual()) {
                     idx = j;
                 }
             }
@@ -203,7 +210,7 @@ public class Videojuego5 {
      * usada para decidir al ganador
      * de la batalla).
      */
-    public static void betterWonArmy(HashMap<Integer, Soldado> army1, HashMap<Integer, Soldado> army2) {
+    public static void betterWonArmy(Soldado[][] army1, Soldado[][] army2) {
         int pointArmy1 = displayLifeN(army1);
         int pointArmy2 = displayLifeN(army2);
         if (pointArmy1 == pointArmy2) {
