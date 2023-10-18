@@ -1,3 +1,4 @@
+package POO_1;
 public class Soldado {
     private String name;
     private int nLife;

@@ -1,4 +1,5 @@
-//Lab5 - Mariel Jara
+//Lab8 - Mariel Jara
+//Tendrá 2 Ejércitos (usar HashMaps)
 import java.util.*;
 public class Videojuego5 {
     public static void main(String[] args) {
@@ -47,7 +48,6 @@ public class Videojuego5 {
         }
         sc.close();
     }
-
     /*
      * Cada soldado tendrá un nombre autogenerado: Soldado0X1, Soldado1X1, etc., un
      * valor de puntos de vida autogenerado aleatoriamente [1..5], la fila y columna
@@ -63,7 +63,7 @@ public class Videojuego5 {
             int lifeN = (int) (Math.random() * 5 + 1);
             int row = (int) (Math.random() * f);
             int col = (int) (Math.random() * c);
-            String name = "Soldado" + row + "X" + col;
+            String name = "Soldado"+row+"X"+col;
             if (!exist(army1, name, row, col) && !exist(army2, name, row, col)){
                 Soldado sol = new Soldado(name, lifeN, row, col);
                 army1.put(i, sol);
@@ -157,6 +157,10 @@ public class Videojuego5 {
     /*
      * un ranking de poder de todos los soldados creados, mayor al menor (usar al
      * menos 2 algoritmos de ordenamiento).
+     * (indicar conclusiones respecto a este ordenamiento de HashMaps)
+     * Conclusiones: un hashmap en este caso tome como clave un entero y esto al imprimir esta ordenado,
+     * pero si fuera al reves o en otro modo aplicariamos un TreeMap o juntariamos valores o claves en un arraylist
+     * dependiendo a lo que queremos.
      */
     public static void rankSoldierBubbleSort(HashMap<Integer, Soldado> army) {
         ArrayList<Soldado> sold = MapToList(army);

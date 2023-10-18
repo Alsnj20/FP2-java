@@ -4,7 +4,7 @@ public class Soldado {
     private int levelAttack;
     private int levelDefense;
     private int levelLife;
-    int speed;
+    private int speed;
     private int row;
     private int column;
     private String posture; //defensiva, ofensiva, fuga

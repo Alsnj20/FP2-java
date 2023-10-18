@@ -1,3 +1,4 @@
+package POO_1;
 import java.util.Scanner;
 class Program1 {
     public static void main(String[] args) {

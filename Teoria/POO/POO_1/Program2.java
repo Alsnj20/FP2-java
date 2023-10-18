@@ -1,3 +1,4 @@
+package POO_1;
 
 import javax.swing.*;
 class Program2{
