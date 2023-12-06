@@ -1,0 +1,11 @@
+Lanzamientos aleatorios de un dado: 
+Lanzamiento 1: 1
+Lanzamiento 2: 6
+Lanzamiento 3: 6
+Lanzamiento 4: 4
+Lanzamiento 5: 4
+Lanzamiento 6: 1
+Lanzamiento 7: 4
+Lanzamiento 8: 3
+Lanzamiento 9: 5
+Lanzamiento 10: 1
