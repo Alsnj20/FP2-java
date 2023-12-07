@@ -1,33 +1,29 @@
 import java.io.*;
 import java.util.Scanner;
+
 /* Generar un conjunto de N enteros aleatorio en intervalo [x..y] 
 yalmacenarlos en un archivo binario, luego leerlos, ordenarlos y
 almacenarlos en otro archivo binario */
 public class Archivo02 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
+        DataOutputStream fileOut;
+        System.out.println("Ingrese el rango minimo: ");
+        int x = sc.nextInt();
+        System.out.println("Ingrese el rango maximo");
+        int y = sc.nextInt();
+        System.out.println("Ingrese las cantidad de numeros enteros");
+        int n = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Enter file binary name: ");
+        String file = sc.nextLine();
         try {
-            DataOutputStream fileOut;
-            System.out.println("Ingrese el rango minimo: ");
-            int x = sc.nextInt();
-            System.out.println("Ingrese el rango maximo");
-            int y = sc.nextInt();
-            System.out.println("Ingrese las cantidad de numeros enteros");
-            int n = sc.nextInt();
-            sc.nextLine(); // Consume the newline character
-
-            System.out.println("Enter file binary name: ");
-            String file = sc.nextLine();
-
-            // Generate and save random integers to a binary file
             fileOut = new DataOutputStream(new FileOutputStream(file));
             for (int i = 0; i < n; i++)
                 fileOut.writeInt((int) (Math.random() * (y - x) + x));
             fileOut.close();
             System.out.println("Save binary file");
 
-            // Read, sort, and save the integers to a new binary file
             int[] array = new int[n];
             DataInputStream fileIn = new DataInputStream(new FileInputStream("./" + file));
             for (int i = 0; i < array.length; i++)
@@ -53,10 +49,6 @@ public class Archivo02 {
 
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
-        } finally {
-            if (sc != null) {
-                sc.close();
-            }
         }
     }
 

@@ -10,7 +10,7 @@ class Archivo01{
         ArrayList<Integer> array = new ArrayList<>();
         String inf = "";char c;
         try{
-            fileIn = new DataInputStream(new FileInputStream("./hola.dat"));
+            fileIn = new DataInputStream(new FileInputStream("./archivo1.dat"));
             while((c = fileIn.readChar()) != 0)
                 inf +=c;
             int cant = fileIn.readInt();//primer entero
